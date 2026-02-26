@@ -1,0 +1,360 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/><meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>USDA Registry · COMET Farm</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+  <style>
+    :root{--ink:#1a1a14;--white:#fff;--cream:#f7f3ec;--cream-dk:#ede8df;--line:#ddd8ce;--line-dk:#b5b0a4;--dim:#6b6760;--faint:#9e9a93;--forest:#1e4d2b;--forest-md:#2a6338;--forest-lt:#d4e8d8;--forest-bg:#eaf3ec;--sage:#5a7f5e;--sage-lt:#c8deca;--soil:#6b4226;--soil-md:#8a5a35;--soil-lt:#e8d5c0;--soil-bg:#faf0e6;--good:#1e6b3a;--good-bg:#d4edda;--good-border:#a3d4af;--warn:#8a5d00;--warn-bg:#fef3c7;--warn-border:#f5d97e;--info:#1a4f7a;--info-bg:#dbeafe;--info-border:#93c5fd;--bad:#8b1a1a;--bad-bg:#fee2e2;--bad-border:#fca5a5;--shadow-sm:0 1px 4px rgba(30,77,43,.08);--shadow:0 4px 20px rgba(30,77,43,.10);--shadow-lg:0 8px 40px rgba(30,77,43,.12)}
+    *,*::before,*::after{box-sizing:border-box}
+    body{margin:0;background:var(--cream);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;font-size:14px;line-height:1.5}
+    .topbar{position:sticky;top:0;z-index:20;background:var(--forest);border-bottom:3px solid #16381f;box-shadow:0 2px 12px rgba(0,0,0,.25)}
+    .topbar-inner{max-width:1120px;margin:0 auto;padding:0 20px;display:flex;align-items:stretch;justify-content:space-between}
+    .brand{display:flex;align-items:center;gap:10px;text-decoration:none;padding:12px 0;color:white;font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:700}
+    .brand-sub{font-weight:400;color:rgba(255,255,255,.55);font-size:11px;margin-left:8px}
+    .nav{display:flex;align-items:stretch}
+    .nav a{font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;color:rgba(255,255,255,.65);text-decoration:none;padding:0 15px;display:flex;align-items:center;border-left:1px solid rgba(255,255,255,.1);transition:color 120ms,background 120ms}
+    .nav a:hover{color:white;background:rgba(255,255,255,.08)}
+    .breadcrumb{max-width:1120px;margin:0 auto;padding:10px 20px 0;font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--faint);display:flex;align-items:center;gap:6px}
+    .breadcrumb a{color:var(--sage);text-decoration:none}.breadcrumb a:hover{text-decoration:underline}
+    .wrap{max-width:1120px;margin:0 auto;padding:16px 20px 64px}
+    .card{background:var(--white);border:1px solid var(--line);border-radius:8px;box-shadow:var(--shadow-lg);overflow:hidden}
+    .header{display:flex;align-items:stretch;border-bottom:2px solid var(--line)}
+    .thumb{width:200px;flex:0 0 200px;border-right:1px solid var(--line);display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;gap:10px}
+    .thumb-icon{font-size:48px;line-height:1}
+    .thumb-type{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;color:rgba(255,255,255,.7);text-align:center}
+    .thumb-short{font-family:'IBM Plex Mono',monospace;font-size:14px;font-weight:700;color:white;text-align:center;letter-spacing:.04em}
+    .titleblock{flex:1;padding:20px 24px}
+    .kicker{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+    .kicker::before{content:'';width:20px;height:2px;flex:0 0 20px;display:inline-block}
+    h1{font-family:'IBM Plex Sans',sans-serif;font-size:24px;font-weight:700;line-height:1.1;letter-spacing:-.02em;margin:0 0 10px}
+    .chips{display:flex;flex-wrap:wrap;gap:5px;margin-bottom:12px}
+    .chip{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+    .chip.concern{background:var(--forest-bg);color:var(--forest);border:1px solid var(--forest-lt)}
+    .chip.class{background:var(--cream);color:var(--dim);border:1px solid var(--line)}
+    .chip.land{background:var(--soil-bg);color:var(--soil-md);border:1px solid var(--soil-lt)}
+    .chip.api{background:var(--good-bg);color:var(--good);border:1px solid var(--good-border)}
+    .chip.pub{background:var(--info-bg);color:var(--info);border:1px solid var(--info-border)}
+    .subtitle{font-size:13px;color:var(--dim);line-height:1.55;border-top:1px solid var(--line);padding-top:10px}
+    .meta-row{display:flex;flex-wrap:wrap;gap:0;border-top:1px solid var(--line);margin-top:10px;padding-top:8px}
+    .meta-item{padding:4px 0;margin-right:20px;font-family:'IBM Plex Mono',monospace;font-size:10px;display:flex;align-items:center;gap:5px}
+    .mlabel{color:var(--faint);text-transform:uppercase;letter-spacing:.08em}
+    .mval{color:var(--ink);font-weight:600}
+    .mval a{color:var(--forest);text-decoration:none}.mval a:hover{text-decoration:underline}
+    .tabs-section{border-bottom:2px solid var(--line)}
+    .tablist{display:flex;overflow-x:auto;background:var(--cream)}
+    .tablist::-webkit-scrollbar{display:none}
+    .tabbtn{appearance:none;border:none;border-right:1px solid var(--line);background:transparent;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--dim);cursor:pointer;padding:13px 18px;display:flex;align-items:center;gap:7px;white-space:nowrap;flex:0 0 auto;border-bottom:3px solid transparent;transition:background 120ms,color 120ms,border-color 120ms}
+    .tabbtn:hover{background:var(--white)}
+    .tabpanel{display:none}.tabpanel.active{display:block;animation:panelIn 160ms ease}
+    @keyframes panelIn{from{opacity:0;transform:translateY(3px)}to{opacity:1;transform:none}}
+    .tab-inner{padding:22px 24px}
+    .tab-summary{font-size:13.5px;color:var(--dim);margin:0 0 18px;line-height:1.55;max-width:700px}
+    .btn-row{display:flex;gap:10px;flex-wrap:wrap}
+    .action-link{display:inline-flex;align-items:center;gap:8px;padding:9px 18px;border-radius:5px;border:2px solid;font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:700;letter-spacing:.07em;text-transform:uppercase;text-decoration:none;transition:background 120ms,color 120ms}
+    .action-link svg{width:12px;height:12px;flex:0 0 12px}
+    .tab-note{font-size:12px;color:var(--dim);margin-top:16px;line-height:1.5;padding:10px 14px;border-left:3px solid;border-radius:0 4px 4px 0}
+    .grid{display:grid;grid-template-columns:1.15fr .85fr;border-top:2px solid var(--line)}
+    .info-panel{padding:22px 24px;border-right:1px solid var(--line)}
+    .panel-heading{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;margin:0 0 12px;display:flex;align-items:center;gap:10px}
+    .panel-heading::after{content:'';flex:1;height:1px;background:var(--line)}
+    .info-summary{font-size:13.5px;line-height:1.55;color:var(--ink)}
+    .info-summary .muted{color:var(--dim)}
+    details{border:1px solid var(--line);border-radius:6px;background:var(--white);overflow:hidden}
+    details+details{margin-top:8px}
+    summary{list-style:none;cursor:pointer;padding:11px 14px;display:flex;align-items:center;justify-content:space-between;gap:10px;user-select:none;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;transition:background 120ms}
+    summary::-webkit-details-marker{display:none}
+    details[open]>summary{border-bottom:1px solid var(--line)}
+    .sum-left{display:flex;align-items:center;gap:8px}
+    .sum-left svg{width:12px;height:12px;flex:0 0 12px}
+    .sum-hint{font-weight:400;font-style:italic;color:var(--faint);text-transform:none;letter-spacing:0;font-family:'IBM Plex Sans',sans-serif;font-size:11px}
+    .chev{width:7px;height:7px;flex:0 0 7px;border-right:2px solid;border-bottom:2px solid;transform:rotate(-45deg);transition:transform 150ms}
+    details[open]>summary .chev{transform:rotate(45deg)}
+    .details-body{padding:14px 16px;font-size:13px;color:var(--ink);line-height:1.55}
+    .details-body p{margin:0 0 10px}.details-body p:last-child{margin:0}
+    .details-body a{text-decoration:none}.details-body a:hover{text-decoration:underline}
+    .eta-wrap,.dtap-wrap{padding:22px 20px;background:var(--cream)}
+    .eta-details,.dtap-details{border:1px solid var(--line);border-radius:8px;background:var(--white);overflow:hidden;box-shadow:var(--shadow-sm)}
+    .eta-body,.dtap-body{padding:18px}
+    .scoreTop{display:flex;align-items:flex-start;justify-content:space-between;gap:14px;flex-wrap:wrap;padding-bottom:16px;margin-bottom:16px;border-bottom:1px solid var(--line)}
+    .score-left{display:flex;align-items:flex-end;gap:12px;flex-wrap:wrap}
+    .score-ring{width:72px;height:72px;flex:0 0 72px}
+    .score-meta .score-title{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:var(--ink);letter-spacing:.06em;text-transform:uppercase;margin-bottom:4px}
+    .score-meta .score-sub{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--faint);line-height:1.7}
+    .badgeRow{display:flex;gap:6px;flex-wrap:wrap;align-items:flex-start;justify-content:flex-end}
+    .badge{display:inline-flex;align-items:center;gap:5px;padding:5px 10px;border-radius:20px;border:1px solid;font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;white-space:nowrap}
+    .badge svg{width:9px;height:9px;flex:0 0 9px}
+    .badge.good{background:var(--good-bg);color:var(--good);border-color:var(--good-border)}
+    .badge.warn{background:var(--warn-bg);color:var(--warn);border-color:var(--warn-border)}
+    .badge.info{background:var(--info-bg);color:var(--info);border-color:var(--info-border)}
+    .badge.bad{background:var(--bad-bg);color:var(--bad);border-color:var(--bad-border)}
+    .section-label{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:var(--faint);margin-bottom:8px;margin-top:0}
+    .gates{display:grid;grid-template-columns:1fr 1fr;gap:7px;margin-bottom:16px}
+    .gate{display:flex;gap:9px;align-items:flex-start;padding:10px 11px;border-radius:6px;border:1px solid;font-size:11.5px}
+    .gate.pass{background:var(--good-bg);border-color:var(--good-border)}
+    .gate.warn{background:var(--warn-bg);border-color:var(--warn-border)}
+    .gate-mark{width:20px;height:20px;flex:0 0 20px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:900}
+    .gate.pass .gate-mark{background:var(--good);color:white}
+    .gate.warn .gate-mark{background:var(--warn);color:white}
+    .gate-name{font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.05em;text-transform:uppercase}
+    .gate.pass .gate-name{color:var(--good)}.gate.warn .gate-name{color:var(--warn)}
+    .gate-desc{color:var(--dim);display:block;margin-top:2px;font-size:11px;line-height:1.35}
+    .bars{display:flex;flex-direction:column;gap:9px;margin-bottom:16px}
+    .barRow{display:grid;grid-template-columns:110px 1fr 32px;gap:8px;align-items:center}
+    .barRow .lbl{font-family:'IBM Plex Mono',monospace;font-size:10.5px;font-weight:700;color:var(--ink)}
+    .meter{height:9px;background:var(--cream-dk);border-radius:9px;overflow:hidden}
+    .fill{height:100%;border-radius:9px}
+    .fill.hi{background:linear-gradient(90deg,var(--forest),var(--sage))}
+    .fill.mid{background:linear-gradient(90deg,var(--sage),#8ab870)}
+    .fill.lo{background:linear-gradient(90deg,var(--warn),#d97706)}
+    .val{font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:var(--faint);text-align:right}
+    .flags-section{margin-bottom:14px}
+    .flag{display:inline-flex;align-items:center;gap:7px;padding:6px 11px;border-radius:5px;border:1px dashed var(--warn-border);background:var(--warn-bg);color:var(--warn);font-size:11.5px;margin-right:6px;margin-bottom:6px}
+    .flag svg{width:11px;height:11px}
+    .eta-links,.dtap-links{padding-top:12px;border-top:1px solid var(--line);font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--faint);letter-spacing:.04em}
+    .eta-links strong,.dtap-links strong{color:var(--dim)}
+    .eta-links a,.dtap-links a{color:var(--forest);text-decoration:none}
+    .eta-links a:hover,.dtap-links a:hover{text-decoration:underline}
+    .foot{padding:12px 24px;font-family:'IBM Plex Mono',monospace;font-size:10.5px;color:rgba(255,255,255,.5);display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:8px}
+    .foot a{color:rgba(255,255,255,.75);text-decoration:none}.foot a:hover{color:white}
+    @media(max-width:820px){.grid{grid-template-columns:1fr}.info-panel{border-right:none;border-bottom:1px solid var(--line)}.gates{grid-template-columns:1fr}.thumb{width:100%;flex:none;height:120px;flex-direction:row;border-right:none;border-bottom:1px solid var(--line)}.header{flex-wrap:wrap}}
+    </style>
+  <style>
+    .topbar{background:#1a3a5c;border-bottom-color:#1a3a5c}
+    .tabbtn:hover,.tabbtn[aria-selected="true"]{color:#1a3a5c}
+    .tabbtn[aria-selected="true"]{border-bottom-color:#1a3a5c}
+    .eta-details>summary{background:#1a3a5c}
+    .panel-heading{color:#1a3a5c}
+    .kicker{color:#5a8fc2}
+    .kicker::before{background:#1a3a5c}
+    summary{color:#1a3a5c;background:var(--forest-bg)}
+    summary:hover{background:var(--forest-lt)}
+    .chev{border-color:#1a3a5c}
+    .details-body a{color:#1a3a5c}
+    h1{color:#1a3a5c}
+  </style>
+</head>
+<body>
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="../index.html">← USDA FAIR Registry<span class="brand-sub">Software Tool Card</span></a>
+    <nav class="nav"><a href="../index.html?type=software">All Tools</a><a href="../index.html">Registry</a></nav>
+  </div>
+</div>
+<div class="breadcrumb">
+  <a href="../index.html">Registry</a><span>›</span>
+  <a href="../index.html?type=software">Software</a><span>›</span>
+  <span style="color:var(--ink);font-weight:600">COMET Farm</span>
+</div>
+<div class="wrap"><div class="card">
+
+  <div class="header">
+    <div class="thumb" style="background:linear-gradient(160deg, #1a3a5c 0%, #0f2238 100%)">
+      <div class="thumb-short">COMET Farm</div>
+      <div class="thumb-type">Software / Model</div>
+    </div>
+    <div class="titleblock">
+      <div class="kicker">Software · primary</div>
+      <h1>COMET Farm</h1>
+      <div class="chips">
+        <span class="chip concern">plants</span><span class="chip concern">animals</span><span class="chip concern">climate</span>
+        <span class="chip class">primary</span>
+        <span class="chip land">Cropland</span><span class="chip land">Rangeland</span>
+        <span class="chip pub">Open</span><span class="chip api">Has API</span>
+      </div>
+      <div class="subtitle">COMET-Farm is a whole-farm and -ranch carbon and GHG accounting system that guides users through describing farm and ranch management practices including alternative future management scenarios. Once the description is complete, a report is generated comparing carbon changes and GHG emissions of current management practices with those of future scenarios. COMET-Farm allows for a flexible, field-specific conservation scenario analysis because users enter specific management details to their up-to-20-year baseline.</div>
+      <div class="meta-row">
+        <div class="meta-item"><span class="mlabel">Org</span>&nbsp;<span class="mval">NRCS,Colorado State University</span></div>
+        <div class="meta-item"><span class="mlabel">Public</span>&nbsp;<span class="mval">Yes</span></div>
+        <div class="meta-item"><span class="mlabel">API</span>&nbsp;<span class="mval">Yes</span></div>
+        <div class="meta-item"><span class="mlabel">Geography</span>&nbsp;<span class="mval">48 conterminous states,Hawaii</span></div><div class="meta-item"><span class="mlabel">Extent</span>&nbsp;<span class="mval">National</span></div><div class="meta-item"><span class="mlabel">Updated</span>&nbsp;<span class="mval">16-May-23</span></div><div class="meta-item"><span class="mlabel">Version</span>&nbsp;<span class="mval">4.1</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="tabs-section">
+    <div class="tablist" role="tablist">
+      <button class="tabbtn" role="tab" data-tab="overview" aria-selected="true">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="6.5" cy="6.5" r="5"/><circle cx="6.5" cy="6.5" r="2"/></svg>Overview
+      </button>
+      <button class="tabbtn" role="tab" data-tab="technical" aria-selected="false">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="2" width="9" height="9"/><path d="M4 5h5M4 7h5M4 9h3"/></svg>Technical
+      </button>
+      <button class="tabbtn" role="tab" data-tab="access" aria-selected="false">
+        <svg width="13" height="13" viewBox="0 0 13 13" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="5" width="9" height="7"/><path d="M4 5V4a2.5 2.5 0 0 1 5 0v1"/></svg>Access &amp; Docs
+      </button>
+    </div>
+
+    <div id="panel-overview" class="tabpanel active">
+      <div class="tab-inner">
+        <p class="tab-summary">COMET-Farm is a whole-farm and -ranch carbon and GHG accounting system that guides users through describing farm and ranch management practices including alternative future management scenarios. Once the description is complete, a report is generated comparing carbon changes and GHG emissions of current management practices with those of future scenarios. COMET-Farm allows for a flexible, field-specific conservation scenario analysis because users enter specific management details to their up-to-20-year baseline.</p>
+        <div class="btn-row"><a class="action-link primary" href="https://comet-farm.com/" target="_blank" rel="noopener" style="background:#1a3a5c;border-color:#1a3a5c;color:white"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h10M8 3l4 4-4 4"/></svg>Open Tool</a><a class="action-link" href="https://comet-farm.com/home/apiview" target="_blank" rel="noopener" style="border-color:#1a3a5c;color:#1a3a5c"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l3-3 3 3M9 7l-3 3"/></svg>API Docs</a></div>
+        
+      </div>
+    </div>
+
+    <div id="panel-technical" class="tabpanel">
+      <div class="tab-inner">
+        <p class="tab-summary">Technical details, outputs, inputs, and related tools for this software.</p>
+        <p><strong>Primary outputs:</strong> crop productivity,GHG emissions,N cycling and losses,soil carbon</p>
+        
+        
+        <p><strong>Related tools:</strong> DAYCENT</p>
+        <p><strong>Contact:</strong>  appnrel@colostate.edu</p>
+      </div>
+    </div>
+
+    <div id="panel-access" class="tabpanel">
+      <div class="tab-inner">
+        <p class="tab-summary">Access, documentation, and stewardship information.</p>
+        <a class="action-link primary" href="https://comet-farm.com/" target="_blank" rel="noopener" style="background:#1a3a5c;border-color:#1a3a5c;color:white"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 7h10M8 3l4 4-4 4"/></svg>Open Tool</a>
+        
+        <a class="action-link" href="https://comet-farm.com/home/apiview" target="_blank" rel="noopener" style="border-color:#1a3a5c;color:#1a3a5c"><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7l3-3 3 3M9 7l-3 3"/></svg>API Docs</a>
+        <div style="margin-top:14px">
+          
+          <p><strong>Contact:</strong>  appnrel@colostate.edu</p>
+        </div>
+        <div class="tab-note" style="background:var(--info-bg);border-left-color:#1a3a5c"><strong>API Documentation:</strong> <a href="https://comet-farm.com/home/apiview" target="_blank">https://comet-farm.com/home/apiview</a></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="grid">
+    <div class="info-panel">
+      <div class="panel-heading">About</div>
+      <div class="info-summary">
+        COMET-Farm is a whole-farm and -ranch carbon and GHG accounting system that guides users through describing farm and ranch management practices including alternative future management scenarios. Once the description is complete, a report is generated comparing carbon changes and GHG emissions of current management practices with those of future scenarios. COMET-Farm allows for a flexible, field-specific conservation scenario analysis because users enter specific management details to their up-to-20-year baseline.
+        <span class="muted"><br><br>Geographic coverage: 48 conterminous states,Hawaii</span>
+      </div>
+      <div style="margin-top:16px">
+        <details open>
+          <summary>
+            <div class="sum-left"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><path d="M2 9l3-3 2 2 3-4"/></svg>Resource Concerns &amp; Context</div>
+            <span class="chev"></span>
+          </summary>
+          <div class="details-body">
+            <p><strong>Resource concerns:</strong> plants, animals, climate, air</p>
+            <p><strong>Tool classification:</strong> primary</p>
+            <p><strong>Land use:</strong> Cropland, Rangeland, Pasture, Forest</p>
+            <p><strong>Organization type:</strong> NRCS, Academia</p>
+            <p><strong>Related tools:</strong> DAYCENT</p>
+          </div>
+        </details>
+        <details>
+          <summary>
+            <div class="sum-left"><svg viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><rect x="2" y="4" width="8" height="6"/><path d="M4 4V3a2 2 0 1 1 4 0v1"/></svg>Stewardship &amp; Versioning</div>
+            <span class="chev"></span>
+          </summary>
+          <div class="details-body">
+            <p><strong>Contact:</strong>  appnrel@colostate.edu</p>
+            <p><strong>Last updated:</strong> 16-May-23</p>
+            <p><strong>Version:</strong> 4.1</p>
+            <p><strong>Supplementary:</strong> https://comet-farm.com/HelpPage</p>
+          </div>
+        </details>
+      </div>
+    </div>
+
+    <div class="eta-wrap">
+      <details class="eta-details" open>
+        <summary>
+          <div class="sum-left">
+            <svg viewBox="0 0 12 12" fill="none" stroke="white" stroke-width="1.8" stroke-linecap="round"><path d="M6 1l1.5 3 3.5.5-2.5 2.5.5 3.5L6 9l-3 1.5.5-3.5L1 4.5 4.5 4z"/></svg>
+            Ethical Technology Assessment
+            <span class="sum-hint">Score 82 · click to collapse</span>
+          </div>
+          <span class="chev" style="border-color:rgba(255,255,255,.5)"></span>
+        </summary>
+        <div class="eta-body">
+          <div class="scoreTop">
+            <div class="score-left">
+              <svg class="score-ring" viewBox="0 0 72 72">
+      <circle cx="36" cy="36" r="30" fill="none" stroke="#e8f3ec" stroke-width="8"/>
+      <circle cx="36" cy="36" r="30" fill="none"
+        stroke="#1e6b3a" stroke-width="8"
+        stroke-dasharray="154.6 188.5"
+        stroke-dashoffset="47"
+        stroke-linecap="round"
+        transform="rotate(-90 36 36)"/>
+      <text x="36" y="40" text-anchor="middle" font-family="IBM Plex Mono, monospace" font-size="14" font-weight="700" fill="#1e6b3a">82</text>
+    </svg>
+              <div class="score-meta">
+                <div class="score-title">ETA Score</div>
+                <div class="score-sub">0–100 scale<br>Confidence: 1/3 (Auto)<br>ETA Framework v1.0</div>
+              </div>
+            </div>
+            <div class="badgeRow"><span class="badge good"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5l2 2 4-4"/></svg>All Gates Pass</span><span class="badge info"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5l2 2 4-4"/></svg>Open Access</span><span class="badge good"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5l2 2 4-4"/></svg>API Available</span><span class="badge good"><svg viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5l2 2 4-4"/></svg>Data Ethics</span></div>
+          </div>
+
+          <div class="section-label">Entry Gates</div>
+          <div class="gates"><div class="gate pass">
+          <div class="gate-mark">✓</div>
+          <div><div class="gate-name">G1 Transparency</div>
+          <span class="gate-desc">Documentation and link available</span></div>
+        </div><div class="gate pass">
+          <div class="gate-mark">✓</div>
+          <div><div class="gate-name">G2 Rights & Control</div>
+          <span class="gate-desc">Publicly accessible / open access</span></div>
+        </div><div class="gate pass">
+          <div class="gate-mark">✓</div>
+          <div><div class="gate-name">G3 No Lock-in</div>
+          <span class="gate-desc">No forced proprietary dependency</span></div>
+        </div><div class="gate pass">
+          <div class="gate-mark">✓</div>
+          <div><div class="gate-name">G4 Stewardship</div>
+          <span class="gate-desc">Point of contact or maintainer listed</span></div>
+        </div></div>
+
+          <div class="section-label" style="margin-top:14px">Category Scores (0–5)</div>
+          <div class="bars"><div class="barRow">
+          <div class="lbl">Data Ethics</div>
+          <div class="meter"><div class="fill hi" style="width:90%"></div></div>
+          <div class="val">4.5</div>
+        </div><div class="barRow">
+          <div class="lbl">Interop</div>
+          <div class="meter"><div class="fill hi" style="width:100%"></div></div>
+          <div class="val">5</div>
+        </div><div class="barRow">
+          <div class="lbl">Commons Fit</div>
+          <div class="meter"><div class="fill mid" style="width:50%"></div></div>
+          <div class="val">2.5</div>
+        </div><div class="barRow">
+          <div class="lbl">Accessibility</div>
+          <div class="meter"><div class="fill hi" style="width:90%"></div></div>
+          <div class="val">4.5</div>
+        </div></div>
+
+          
+
+          <div class="eta-links">
+            <strong>NOTE —</strong> Auto-generated score from registry data. Score reflects available metadata. To improve score, add documentation, API, and contact info to registry.js.
+            <br><strong>Link:</strong> <a href="https://comet-farm.com/" target="_blank">https://comet-farm.com/</a>
+          </div>
+        </div>
+      </details>
+    </div>
+  </div>
+
+  <div class="foot" style="background:#1a3a5c">
+    <span>USDA FAIR Tech Registry · ETA Score auto-generated · <a href="../index.html">← Back to Registry</a></span>
+    <span>registry.js source · Edit to update · PR to submit changes</span>
+  </div>
+</div></div>
+<script>
+  const tabs=Array.from(document.querySelectorAll('.tabbtn'));
+  const panels=Array.from(document.querySelectorAll('.tabpanel'));
+  function activateTab(name,focus=false){
+    tabs.forEach(btn=>{const on=btn.dataset.tab===name;btn.setAttribute('aria-selected',on?'true':'false');if(on&&focus)btn.focus();});
+    panels.forEach(p=>p.classList.toggle('active',p.id==='panel-'+name));
+  }
+  tabs.forEach((btn,i)=>{
+    btn.addEventListener('click',()=>activateTab(btn.dataset.tab,true));
+    btn.addEventListener('keydown',e=>{
+      if(e.key==='ArrowRight'){e.preventDefault();activateTab(tabs[(i+1)%tabs.length].dataset.tab,true);}
+      if(e.key==='ArrowLeft'){e.preventDefault();activateTab(tabs[(i-1+tabs.length)%tabs.length].dataset.tab,true);}
+    });
+  });
+  activateTab('overview',false);
+</script>
+</body></html>

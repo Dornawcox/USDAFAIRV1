@@ -1,0 +1,632 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1"/>
+  <title>USDA Conservation Tech Registry — FAIR + ETA</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500;600;700&family=IBM+Plex+Sans:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&family=Source+Serif+4:ital,opsz,wght@0,8..60,300;0,8..60,600;1,8..60,400&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --ink:#1a1a14; --white:#fff; --cream:#f7f3ec; --cream-dk:#ede8df;
+      --line:#ddd8ce; --line-dk:#b5b0a4; --dim:#6b6760; --faint:#9e9a93;
+      --forest:#1e4d2b; --forest-md:#2a6338; --forest-lt:#d4e8d8; --forest-bg:#eaf3ec;
+      --sage:#5a7f5e; --sage-lt:#c8deca;
+      --soil:#6b4226; --soil-md:#8a5a35; --soil-lt:#e8d5c0; --soil-bg:#faf0e6;
+      --blue:#1a3a5c; --blue-lt:#dbeafe; --blue-bg:#f0f6ff;
+      --good:#1e6b3a; --good-bg:#d4edda; --good-border:#a3d4af;
+      --warn:#8a5d00; --warn-bg:#fef3c7; --warn-border:#f5d97e;
+      --bad:#8b1a1a; --bad-bg:#fee2e2; --bad-border:#fca5a5;
+      --info:#1a4f7a; --info-bg:#dbeafe; --info-border:#93c5fd;
+      --shadow:0 4px 20px rgba(30,77,43,.10),0 1px 4px rgba(30,77,43,.06);
+      --shadow-lg:0 8px 40px rgba(30,77,43,.12),0 2px 8px rgba(30,77,43,.06);
+    }
+    *,*::before,*::after{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--cream);color:var(--ink);font-family:'IBM Plex Sans',sans-serif;font-size:14px;line-height:1.5;background-image:radial-gradient(ellipse 70% 50% at 0% 100%,rgba(30,77,43,.04) 0%,transparent 60%),radial-gradient(ellipse 50% 40% at 100% 0%,rgba(107,66,38,.03) 0%,transparent 60%)}
+
+    /* ── TOPBAR ── */
+    .topbar{position:sticky;top:0;z-index:40;background:var(--forest);border-bottom:3px solid #16381f;box-shadow:0 2px 16px rgba(0,0,0,.3)}
+    .topbar-inner{max-width:1280px;margin:0 auto;padding:0 20px;display:flex;align-items:stretch;justify-content:space-between;gap:16px}
+    .brand{display:flex;align-items:center;gap:10px;text-decoration:none;padding:12px 0}
+    .brand-mark{width:32px;height:32px;background:rgba(255,255,255,.15);border-radius:6px;display:flex;align-items:center;justify-content:center;border:1px solid rgba(255,255,255,.2)}
+    .brand-mark svg{width:18px;height:18px;stroke:white;fill:none}
+    .brand-text{font-family:'IBM Plex Sans',sans-serif;font-size:13px;font-weight:700;color:white;letter-spacing:.01em}
+    .brand-sub{font-weight:400;color:rgba(255,255,255,.55);font-size:11px;margin-left:8px}
+    .topbar-stats{display:flex;align-items:center;gap:0;margin-left:auto}
+    .tstat{padding:0 14px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:rgba(255,255,255,.6);letter-spacing:.06em;border-left:1px solid rgba(255,255,255,.1);display:flex;align-items:center;gap:5px}
+    .tstat b{color:white;font-size:13px}
+    .topbar-search{display:flex;align-items:center;padding:8px 0}
+    .search-wrap{position:relative}
+    .search-wrap input{background:rgba(255,255,255,.12);border:1px solid rgba(255,255,255,.2);border-radius:6px;padding:7px 12px 7px 34px;font-family:'IBM Plex Mono',monospace;font-size:11px;color:white;width:220px;outline:none;transition:background 150ms,border-color 150ms}
+    .search-wrap input::placeholder{color:rgba(255,255,255,.4)}
+    .search-wrap input:focus{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.4);width:260px}
+    .search-icon{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:14px;height:14px;stroke:rgba(255,255,255,.5);pointer-events:none}
+
+    /* ── HERO ── */
+    .hero{background:linear-gradient(135deg,var(--forest) 0%,#2a6338 40%,#1e4d2b 100%);padding:44px 20px 40px;position:relative;overflow:hidden}
+    .hero::before{content:'';position:absolute;inset:0;background-image:url("data:image/svg+xml,%3Csvg width='80' height='80' viewBox='0 0 80 80' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='rgba(255,255,255,0.025)'%3E%3Ccircle cx='40' cy='40' r='1.5'/%3E%3C/g%3E%3C/svg%3E");pointer-events:none}
+    .hero-inner{max-width:1280px;margin:0 auto;position:relative;z-index:1}
+    .hero-kicker{font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;color:rgba(255,255,255,.5);margin-bottom:12px;display:flex;align-items:center;gap:8px}
+    .hero-kicker::before{content:'';width:24px;height:2px;background:rgba(255,255,255,.3)}
+    .hero h1{font-family:'Source Serif 4',Georgia,serif;font-size:36px;font-weight:600;color:white;margin:0 0 12px;line-height:1.1;letter-spacing:-.02em}
+    .hero h1 em{font-style:italic;color:rgba(255,255,255,.7)}
+    .hero-desc{font-size:15px;color:rgba(255,255,255,.7);max-width:640px;line-height:1.6;margin-bottom:20px}
+    .hero-pills{display:flex;flex-wrap:wrap;gap:8px}
+    .hero-pill{display:inline-flex;align-items:center;gap:6px;padding:6px 14px;border-radius:20px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;border:1px solid rgba(255,255,255,.2);color:rgba(255,255,255,.8);background:rgba(255,255,255,.08);cursor:pointer;transition:all 150ms}
+    .hero-pill:hover,.hero-pill.active{background:rgba(255,255,255,.18);border-color:rgba(255,255,255,.4);color:white}
+    .hero-pill.sw.active{background:var(--blue);border-color:var(--blue-lt);color:white}
+    .hero-pill.ds.active{background:var(--soil);border-color:var(--soil-lt);color:white}
+    .hero-stats{margin-top:24px;display:flex;gap:24px;flex-wrap:wrap}
+    .hstat{font-family:'IBM Plex Mono',monospace;font-size:11px;color:rgba(255,255,255,.6)}
+    .hstat b{display:block;font-size:28px;font-weight:700;color:white;line-height:1;margin-bottom:2px}
+
+    /* ── MAIN LAYOUT ── */
+    .main{max-width:1280px;margin:0 auto;padding:24px 20px 60px;display:grid;grid-template-columns:260px 1fr;gap:24px}
+    @media(max-width:900px){.main{grid-template-columns:1fr}}
+
+    /* ── SIDEBAR FILTERS ── */
+    .sidebar{position:sticky;top:66px;height:fit-content;display:flex;flex-direction:column;gap:12px}
+    .filter-card{background:var(--white);border:1px solid var(--line);border-radius:8px;overflow:hidden;box-shadow:0 1px 6px rgba(30,77,43,.06)}
+    .filter-head{padding:10px 14px;background:var(--cream);border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between}
+    .filter-head h3{margin:0;font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.14em;text-transform:uppercase;color:var(--forest)}
+    .filter-clear{font-family:'IBM Plex Mono',monospace;font-size:9px;color:var(--sage);cursor:pointer;text-decoration:none;font-weight:600;letter-spacing:.04em;background:none;border:none;padding:0}
+    .filter-clear:hover{color:var(--forest)}
+    .filter-body{padding:10px 12px;display:flex;flex-direction:column;gap:3px}
+    .fcheck{display:flex;align-items:center;gap:8px;padding:4px 6px;border-radius:4px;cursor:pointer;transition:background 100ms}
+    .fcheck:hover{background:var(--cream)}
+    .fcheck input[type=checkbox]{accent-color:var(--forest);width:13px;height:13px;cursor:pointer;flex:0 0 13px}
+    .fcheck-label{font-size:12px;color:var(--ink);flex:1;cursor:pointer}
+    .fcheck-count{font-family:'IBM Plex Mono',monospace;font-size:9.5px;color:var(--faint);font-weight:600}
+    .score-filter{padding:10px 14px}
+    .score-range{display:flex;align-items:center;gap:8px}
+    .score-range input[type=range]{flex:1;accent-color:var(--forest);height:4px;cursor:pointer}
+    .score-range .val{font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;color:var(--forest);min-width:28px}
+
+    /* ── RESULTS AREA ── */
+    .results-wrap{display:flex;flex-direction:column;gap:16px}
+    .results-bar{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:10px;padding-bottom:14px;border-bottom:1px solid var(--line)}
+    .results-count{font-family:'IBM Plex Mono',monospace;font-size:12px;color:var(--dim)}
+    .results-count b{color:var(--ink);font-weight:700}
+    .sort-wrap{display:flex;align-items:center;gap:8px}
+    .sort-label{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--faint);letter-spacing:.06em;text-transform:uppercase}
+    .sort-btn{appearance:none;background:var(--white);border:1px solid var(--line);border-radius:4px;padding:6px 10px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:var(--dim);cursor:pointer;transition:all 120ms;letter-spacing:.04em}
+    .sort-btn.active,.sort-btn:hover{background:var(--forest);color:white;border-color:var(--forest)}
+    .active-filters{display:flex;flex-wrap:wrap;gap:6px}
+    .af-tag{display:inline-flex;align-items:center;gap:5px;padding:4px 10px;background:var(--forest-bg);border:1px solid var(--forest-lt);border-radius:20px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;color:var(--forest);letter-spacing:.04em}
+    .af-tag button{background:none;border:none;padding:0;cursor:pointer;color:var(--sage);font-size:12px;line-height:1;display:flex;align-items:center}
+    .af-tag button:hover{color:var(--forest)}
+
+    /* ── TOOL / DATASET CARDS ── */
+    .cards-grid{display:flex;flex-direction:column;gap:10px}
+
+    .rcard{background:var(--white);border:1px solid var(--line);border-radius:8px;overflow:hidden;box-shadow:0 1px 6px rgba(30,77,43,.05);transition:border-color 150ms,box-shadow 150ms,transform 150ms;display:grid;grid-template-columns:1fr auto;cursor:pointer}
+    .rcard:hover{border-color:var(--forest);box-shadow:var(--shadow);transform:translateY(-1px)}
+    .rcard.ds-card{border-left:4px solid var(--soil)}
+    .rcard.sw-card{border-left:4px solid var(--blue)}
+    .rcard-body{padding:14px 16px;display:flex;flex-direction:column;gap:5px}
+    .rcard-top{display:flex;align-items:flex-start;gap:10px;flex-wrap:wrap}
+    .rcard-type{font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:700;letter-spacing:.12em;text-transform:uppercase;padding:3px 8px;border-radius:3px}
+    .rcard-type.sw{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-lt)}
+    .rcard-type.ds{background:var(--soil-bg);color:var(--soil);border:1px solid var(--soil-lt)}
+    .rcard-name{font-weight:700;font-size:14px;color:var(--ink);line-height:1.3;flex:1}
+    .rcard-short{font-family:'IBM Plex Mono',monospace;font-size:10px;color:var(--faint);font-weight:600}
+    .rcard-org{font-size:12px;color:var(--dim)}
+    .rcard-desc{font-size:12.5px;color:var(--dim);line-height:1.45;-webkit-line-clamp:2;display:-webkit-box;-webkit-box-orient:vertical;overflow:hidden}
+    .rcard-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+    .tag{display:inline-flex;align-items:center;padding:2px 8px;border-radius:3px;font-family:'IBM Plex Mono',monospace;font-size:9px;font-weight:600;letter-spacing:.05em;text-transform:uppercase}
+    .tag.concern{background:var(--forest-bg);color:var(--forest);border:1px solid var(--forest-lt)}
+    .tag.class{background:var(--cream);color:var(--dim);border:1px solid var(--line)}
+    .tag.land{background:var(--soil-bg);color:var(--soil-md);border:1px solid var(--soil-lt)}
+    .tag.api-yes{background:var(--good-bg);color:var(--good);border:1px solid var(--good-border)}
+    .tag.pub-yes{background:var(--blue-bg);color:var(--blue);border:1px solid var(--blue-lt)}
+    .rcard-score{display:flex;flex-direction:column;align-items:center;justify-content:center;padding:14px 18px;background:var(--cream);border-left:1px solid var(--line);min-width:80px;gap:4px}
+    .score-num{font-family:'IBM Plex Mono',monospace;font-size:28px;font-weight:700;line-height:1;letter-spacing:-.04em}
+    .score-num.hi{color:var(--good)}
+    .score-num.mid{color:var(--warn)}
+    .score-num.lo{color:var(--bad)}
+    .score-label{font-family:'IBM Plex Mono',monospace;font-size:8.5px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--faint);text-align:center}
+    .score-mini-bars{display:flex;flex-direction:column;gap:2px;width:100%;margin-top:4px}
+    .smb{height:3px;border-radius:2px;background:var(--line)}
+    .smb-fill{height:100%;border-radius:2px}
+    .smb-fill.hi{background:var(--forest)}
+    .smb-fill.mid{background:var(--sage)}
+    .smb-fill.lo{background:var(--warn)}
+    .gate-pills{display:flex;gap:2px;margin-top:4px}
+    .gp{width:12px;height:12px;border-radius:2px;font-size:7px;font-weight:900;display:flex;align-items:center;justify-content:center}
+    .gp.pass{background:var(--good);color:white}
+    .gp.fail{background:var(--bad);color:white}
+
+    /* Empty state */
+    .empty-state{padding:60px 24px;text-align:center;color:var(--dim)}
+    .empty-state h3{font-family:'Source Serif 4',serif;font-size:20px;font-weight:400;margin:0 0 8px;color:var(--ink)}
+    .empty-state p{font-size:13px;margin:0}
+
+    /* Load more */
+    .load-more-wrap{text-align:center;padding:20px}
+    .load-more-btn{appearance:none;background:var(--white);border:2px solid var(--forest);border-radius:6px;padding:10px 28px;font-family:'IBM Plex Mono',monospace;font-size:11px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:var(--forest);cursor:pointer;transition:all 150ms}
+    .load-more-btn:hover{background:var(--forest);color:white}
+
+    /* ── MOBILE FILTER TOGGLE ── */
+    .mobile-filter-btn{display:none;appearance:none;background:var(--forest);border:none;border-radius:6px;padding:9px 16px;font-family:'IBM Plex Mono',monospace;font-size:10px;font-weight:700;letter-spacing:.08em;text-transform:uppercase;color:white;cursor:pointer;align-items:center;gap:8px}
+    @media(max-width:900px){
+      .mobile-filter-btn{display:flex}
+      .sidebar{position:static;display:none}
+      .sidebar.open{display:flex}
+    }
+
+    /* ── FOOTER ── */
+    .footer{background:var(--forest);padding:20px;font-family:'IBM Plex Mono',monospace;font-size:10px;color:rgba(255,255,255,.45);text-align:center}
+    .footer a{color:rgba(255,255,255,.65);text-decoration:none}
+    .footer a:hover{color:white}
+    .footer-git{margin-top:6px;font-size:9px;color:rgba(255,255,255,.3)}
+
+    /* Animations */
+    @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+    .rcard{animation:fadeUp 200ms ease both}
+
+    /* ── SCORE DONUT (inline SVG) ── */
+    .donut-wrap{width:36px;height:36px;flex:0 0 36px}
+
+    /* Info panel */
+    .info-banner{background:var(--blue-bg);border:1px solid var(--blue-lt);border-radius:8px;padding:14px 16px;margin-bottom:16px;display:flex;gap:12px;align-items:flex-start}
+    .info-banner svg{flex:0 0 16px;stroke:var(--blue);width:16px;height:16px;margin-top:1px}
+    .info-banner-text{font-size:12.5px;color:var(--blue);line-height:1.5}
+    .info-banner-text strong{display:block;font-weight:700;margin-bottom:2px}
+
+    .concern-icon{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:4px;vertical-align:middle}
+    .ci-soil{background:#6b4226} .ci-water{background:#1a4f7a} .ci-air{background:#5a7f5e}
+    .ci-plants{background:#2a6338} .ci-animals{background:#8a5d00} .ci-climate{background:#1e4d2b}
+    .ci-energy{background:#d97706} .ci-human{background:#7a4520} .ci-all{background:#333}
+
+    /* View card link */
+    .view-card-link{display:inline-flex;align-items:center;gap:5px;padding:5px 12px;background:var(--forest);color:white;border-radius:4px;font-family:'IBM Plex Mono',monospace;font-size:9.5px;font-weight:700;letter-spacing:.06em;text-transform:uppercase;text-decoration:none;transition:background 120ms;margin-top:4px;width:fit-content}
+    .view-card-link:hover{background:var(--forest-md)}
+    .rcard.ds-card .view-card-link{background:var(--soil)}
+    .rcard.ds-card .view-card-link:hover{background:var(--soil-md)}
+  </style>
+</head>
+<body>
+
+<!-- TOPBAR -->
+<div class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html">
+      <div class="brand-mark">
+        <svg viewBox="0 0 20 20" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="10" cy="10" r="3"/><path d="M10 2v3M10 15v3M2 10h3M15 10h3"/>
+          <path d="M4.9 4.9l2 2M13.1 13.1l2 2M4.9 15.1l2-2M13.1 6.9l2-2"/>
+        </svg>
+      </div>
+      <span class="brand-text">USDA FAIR Tech Registry
+        <span class="brand-sub">Conservation Tools &amp; Datasets</span>
+      </span>
+    </a>
+    <div class="topbar-stats">
+      <div class="tstat"><b id="stat-sw">97</b>Tools</div>
+      <div class="tstat"><b id="stat-ds">35</b>Datasets</div>
+      <div class="tstat"><b id="stat-vis">—</b>Shown</div>
+    </div>
+    <div class="topbar-search">
+      <div class="search-wrap">
+        <svg class="search-icon" viewBox="0 0 16 16" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="7" cy="7" r="5"/><path d="M11 11l3 3"/></svg>
+        <input type="text" id="global-search" placeholder="Search tools, datasets, orgs…" autocomplete="off">
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- HERO -->
+<div class="hero">
+  <div class="hero-inner">
+    <div class="hero-kicker">USDA · NRCS · Conservation Technology</div>
+    <h1>FAIR Tech Registry<br><em>Conservation Tools &amp; Datasets</em></h1>
+    <p class="hero-desc">Discoverable, assessable records for 132 conservation software tools and datasets, each scored for openness, interoperability, and ethical data stewardship. Built for Git-native version control.</p>
+    <div class="hero-pills">
+      <span class="hero-pill active" id="pill-all" data-filter="all">All Resources</span>
+      <span class="hero-pill sw" id="pill-sw" data-filter="software">Software &amp; Models</span>
+      <span class="hero-pill ds" id="pill-ds" data-filter="datasets">Datasets</span>
+    </div>
+    <div class="hero-stats">
+      <div class="hstat"><b id="hs-sw">97</b>Software / Models</div>
+      <div class="hstat"><b id="hs-ds">35</b>Datasets</div>
+      <div class="hstat"><b id="hs-api">6</b>Have Open API</div>
+      <div class="hstat"><b id="hs-pub">88</b>Publicly Accessible</div>
+    </div>
+  </div>
+</div>
+
+<!-- MAIN -->
+<div class="main">
+  <!-- SIDEBAR -->
+  <aside class="sidebar" id="sidebar">
+
+    <div class="filter-card">
+      <div class="filter-head">
+        <h3>Score ≥</h3>
+        <button class="filter-clear" onclick="resetScore()">reset</button>
+      </div>
+      <div class="score-filter">
+        <div class="score-range">
+          <input type="range" id="score-min" min="0" max="100" step="5" value="0" oninput="updateScoreLabel()">
+          <span class="val" id="score-val">0</span>
+        </div>
+      </div>
+    </div>
+
+    <div class="filter-card">
+      <div class="filter-head">
+        <h3>Resource Concern</h3>
+        <button class="filter-clear" onclick="clearGroup('concern')">clear</button>
+      </div>
+      <div class="filter-body" id="filter-concern"></div>
+    </div>
+
+    <div class="filter-card">
+      <div class="filter-head">
+        <h3>Tool Class</h3>
+        <button class="filter-clear" onclick="clearGroup('class')">clear</button>
+      </div>
+      <div class="filter-body" id="filter-class"></div>
+    </div>
+
+    <div class="filter-card">
+      <div class="filter-head">
+        <h3>Land Use</h3>
+        <button class="filter-clear" onclick="clearGroup('land')">clear</button>
+      </div>
+      <div class="filter-body" id="filter-land"></div>
+    </div>
+
+    <div class="filter-card">
+      <div class="filter-head">
+        <h3>Organization</h3>
+        <button class="filter-clear" onclick="clearGroup('org')">clear</button>
+      </div>
+      <div class="filter-body" id="filter-org"></div>
+    </div>
+
+    <div class="filter-card">
+      <div class="filter-head"><h3>Access</h3></div>
+      <div class="filter-body">
+        <label class="fcheck"><input type="checkbox" id="f-public" onchange="applyFilters()"><span class="fcheck-label">Publicly Available</span></label>
+        <label class="fcheck"><input type="checkbox" id="f-api" onchange="applyFilters()"><span class="fcheck-label">Has Open API</span></label>
+      </div>
+    </div>
+
+  </aside>
+
+  <!-- RESULTS -->
+  <div class="results-wrap">
+    <div class="info-banner">
+      <svg viewBox="0 0 16 16" fill="none" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><circle cx="8" cy="8" r="6.5"/><path d="M8 7.5v4M8 5.5v.5"/></svg>
+      <div class="info-banner-text">
+        <strong>Git-native registry</strong>
+        Each card record is a JSON object in <code style="font-family:monospace;background:rgba(26,79,122,.1);padding:1px 4px;border-radius:3px">registry.js</code> — version-controlled and diff-able. Cards link to individual HTML pages auto-generated from this source. Add a tool by editing the registry file and opening a PR.
+      </div>
+    </div>
+
+    <div class="results-bar">
+      <div class="results-count" id="results-count"><b>132</b> resources</div>
+      <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+        <button class="mobile-filter-btn" onclick="document.getElementById('sidebar').classList.toggle('open')">
+          <svg width="12" height="12" viewBox="0 0 12 12" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><path d="M1 3h10M3 6h6M5 9h2"/></svg>
+          Filters
+        </button>
+        <div class="sort-wrap">
+          <span class="sort-label">Sort</span>
+          <button class="sort-btn active" data-sort="score" onclick="setSort('score',this)">Score ↓</button>
+          <button class="sort-btn" data-sort="name" onclick="setSort('name',this)">A–Z</button>
+          <button class="sort-btn" data-sort="updated" onclick="setSort('updated',this)">Recent</button>
+        </div>
+      </div>
+    </div>
+    <div class="active-filters" id="active-filters"></div>
+    <div class="cards-grid" id="cards-grid"></div>
+    <div class="load-more-wrap" id="load-more-wrap" style="display:none">
+      <button class="load-more-btn" onclick="loadMore()">Load more</button>
+    </div>
+    <div class="empty-state" id="empty-state" style="display:none">
+      <h3>No results found</h3>
+      <p>Try adjusting your filters or search term.</p>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  USDA Conservation Tech Registry · FAIR + ETA Assessment Framework · Data source: ConservationDataTools_31Oct2024.csv<br>
+  <span class="footer-git">Git-native architecture — cards served as static HTML, data versioned in registry.js · Build dynamic backend by pointing to this repo's JSON API</span>
+</div>
+
+<script>
+// ─── INLINE REGISTRY DATA ───────────────────────────────────────────────────
+</script>
+<script src="registry.js"></script>
+<script>
+// ─── APP STATE ──────────────────────────────────────────────────────────────
+const STATE = {
+  typeFilter: 'all',      // 'all' | 'software' | 'datasets'
+  search: '',
+  scoreMin: 0,
+  sort: 'score',
+  filters: {
+    concern: new Set(),
+    class: new Set(),
+    land: new Set(),
+    org: new Set()
+  },
+  pubOnly: false,
+  apiOnly: false,
+  page: 1,
+  pageSize: 30
+};
+
+// Flatten all records
+const ALL = [
+  ...REGISTRY.software.map(r => ({...r, _type:'software', _score: r.eta.score})),
+  ...REGISTRY.datasets.map(r => ({...r, _type:'dataset', _score: r.dtap.score}))
+];
+
+// ─── FILTER PANEL BUILDERS ──────────────────────────────────────────────────
+function buildFilterPanels() {
+  const countInField = (records, getter) => {
+    const counts = {};
+    records.forEach(r => getter(r).forEach(v => { counts[v] = (counts[v]||0)+1; }));
+    return counts;
+  };
+
+  const concerns = countInField(ALL, r => r.concerns);
+  const classes  = countInField(ALL, r => r.modelClass||[]);
+  const lands    = countInField(ALL, r => r.landUse||[]);
+  const orgs     = countInField(ALL, r => r.orgCat||[]);
+
+  function buildGroup(elId, data, groupKey) {
+    const el = document.getElementById(elId);
+    el.innerHTML = Object.entries(data)
+      .filter(([k]) => k)
+      .sort((a,b) => b[1]-a[1])
+      .map(([k,cnt]) => `
+        <label class="fcheck">
+          <input type="checkbox" data-group="${groupKey}" data-val="${k.replace(/"/g,'&quot;')}" onchange="toggleFilter('${groupKey}','${k.replace(/'/g,"\\'")}')">
+          <span class="fcheck-label">${k}</span>
+          <span class="fcheck-count">${cnt}</span>
+        </label>`).join('');
+  }
+
+  buildGroup('filter-concern', concerns, 'concern');
+  buildGroup('filter-class', classes, 'class');
+  buildGroup('filter-land', lands, 'land');
+  buildGroup('filter-org', orgs, 'org');
+}
+
+// ─── FILTERING ──────────────────────────────────────────────────────────────
+function getFiltered() {
+  let records = ALL;
+
+  // Type filter
+  if (STATE.typeFilter === 'software') records = records.filter(r => r._type === 'software');
+  if (STATE.typeFilter === 'datasets') records = records.filter(r => r._type === 'dataset');
+
+  // Search
+  if (STATE.search) {
+    const q = STATE.search.toLowerCase();
+    records = records.filter(r =>
+      r.name.toLowerCase().includes(q) ||
+      (r.short||'').toLowerCase().includes(q) ||
+      r.org.toLowerCase().includes(q) ||
+      r.desc.toLowerCase().includes(q) ||
+      r.concerns.some(c => c.toLowerCase().includes(q)) ||
+      (r.modelClass||[]).some(c => c.toLowerCase().includes(q))
+    );
+  }
+
+  // Score min
+  if (STATE.scoreMin > 0) records = records.filter(r => r._score >= STATE.scoreMin);
+
+  // Tag filters
+  if (STATE.filters.concern.size) records = records.filter(r => r.concerns.some(c => STATE.filters.concern.has(c)));
+  if (STATE.filters.class.size)   records = records.filter(r => (r.modelClass||[]).some(c => STATE.filters.class.has(c)));
+  if (STATE.filters.land.size)    records = records.filter(r => (r.landUse||[]).some(l => STATE.filters.land.has(l)));
+  if (STATE.filters.org.size)     records = records.filter(r => (r.orgCat||[]).some(o => STATE.filters.org.has(o)));
+
+  // Access filters
+  if (STATE.pubOnly) records = records.filter(r => (r.public||'').toLowerCase() === 'yes');
+  if (STATE.apiOnly) records = records.filter(r => (r.hasApi||'').toLowerCase() === 'yes');
+
+  // Sort
+  if (STATE.sort === 'score') records = [...records].sort((a,b) => b._score - a._score);
+  if (STATE.sort === 'name')  records = [...records].sort((a,b) => a.name.localeCompare(b.name));
+  if (STATE.sort === 'updated') records = [...records].sort((a,b) => (b.updated||'').localeCompare(a.updated||''));
+
+  return records;
+}
+
+function applyFilters() {
+  STATE.pubOnly = document.getElementById('f-public').checked;
+  STATE.apiOnly = document.getElementById('f-api').checked;
+  STATE.page = 1;
+  renderResults();
+}
+
+function toggleFilter(group, val) {
+  if (STATE.filters[group].has(val)) STATE.filters[group].delete(val);
+  else STATE.filters[group].add(val);
+  STATE.page = 1;
+  renderResults();
+  renderActiveTags();
+}
+
+function clearGroup(group) {
+  STATE.filters[group].clear();
+  document.querySelectorAll(`[data-group="${group}"]`).forEach(el => el.checked = false);
+  renderResults();
+  renderActiveTags();
+}
+
+function resetScore() {
+  STATE.scoreMin = 0;
+  document.getElementById('score-min').value = 0;
+  document.getElementById('score-val').textContent = '0';
+  renderResults();
+}
+
+function updateScoreLabel() {
+  STATE.scoreMin = parseInt(document.getElementById('score-min').value);
+  document.getElementById('score-val').textContent = STATE.scoreMin;
+  STATE.page = 1;
+  renderResults();
+}
+
+function setSort(sort, btn) {
+  STATE.sort = sort;
+  document.querySelectorAll('.sort-btn').forEach(b => b.classList.remove('active'));
+  btn.classList.add('active');
+  STATE.page = 1;
+  renderResults();
+}
+
+function setType(type) {
+  STATE.typeFilter = type;
+  ['all','sw','ds'].forEach(k => document.getElementById('pill-'+k).classList.remove('active'));
+  const keyMap = {all:'all', software:'sw', datasets:'ds'};
+  document.getElementById('pill-'+(keyMap[type])).classList.add('active');
+  STATE.page = 1;
+  renderResults();
+}
+
+function renderActiveTags() {
+  const el = document.getElementById('active-filters');
+  const tags = [];
+  Object.entries(STATE.filters).forEach(([group, vals]) => {
+    vals.forEach(v => tags.push({group, val: v}));
+  });
+  el.innerHTML = tags.map(t => `
+    <span class="af-tag">${t.val}
+      <button onclick="removetag('${t.group}','${t.val.replace(/'/g,"\\'")}')">×</button>
+    </span>`).join('');
+}
+
+function removetag(group, val) {
+  STATE.filters[group].delete(val);
+  document.querySelectorAll(`[data-group="${group}"][data-val="${val}"]`).forEach(el => el.checked = false);
+  renderResults();
+  renderActiveTags();
+}
+
+// ─── CARD RENDERING ─────────────────────────────────────────────────────────
+function scoreClass(s) { return s >= 70 ? 'hi' : s >= 45 ? 'mid' : 'lo'; }
+function scoreColor(s) { return s >= 70 ? 'var(--forest)' : s >= 45 ? 'var(--sage)' : 'var(--warn)'; }
+
+function miniBar(val, max5) {
+  const pct = Math.round((val / max5) * 100);
+  const cls = pct >= 70 ? 'hi' : pct >= 45 ? 'mid' : 'lo';
+  return `<div class="smb"><div class="smb-fill ${cls}" style="width:${pct}%"></div></div>`;
+}
+
+function renderCard(r, idx) {
+  const isSW = r._type === 'software';
+  const score = r._score;
+  const sc = scoreClass(score);
+
+  // Cats/dims for mini bars
+  let bars = '';
+  if (isSW) {
+    bars = r.eta.cats.map(c => miniBar(c, 5)).join('');
+  } else {
+    bars = r.dtap.dims.map(d => miniBar(d, 5)).join('');
+  }
+
+  // Gate pills (SW only)
+  let gatePills = '';
+  if (isSW) {
+    gatePills = Object.values(r.eta.gates).map(v =>
+      `<div class="gp ${v?'pass':'fail'}">${v?'✓':'✗'}</div>`
+    ).join('');
+  }
+
+  // Tags
+  const concernTags = r.concerns.slice(0,3).map(c =>
+    `<span class="tag concern"><span class="concern-icon ci-${c}"></span>${c}</span>`).join('');
+  const classTags = (r.modelClass||[]).slice(0,2).map(c =>
+    `<span class="tag class">${c}</span>`).join('');
+  const landTags = (r.landUse||[]).slice(0,2).map(l =>
+    `<span class="tag land">${l}</span>`).join('');
+  const apiTag = (r.hasApi||'').toLowerCase()==='yes' ? `<span class="tag api-yes">API</span>` : '';
+  const pubTag = (r.public||'').toLowerCase()==='yes' ? `<span class="tag pub-yes">Open Access</span>` : '';
+
+  // Card page link
+  const cardSlug = `cards/${r._type}-${r.id}.html`;
+
+  return `<div class="rcard ${isSW?'sw-card':'ds-card'}" style="animation-delay:${Math.min(idx*20,200)}ms" onclick="window.open('${cardSlug}','_blank')">
+    <div class="rcard-body">
+      <div class="rcard-top">
+        <span class="rcard-type ${isSW?'sw':'ds'}">${isSW?'Software':'Dataset'}</span>
+        <span class="rcard-name">${r.name}</span>
+        ${r.short ? `<span class="rcard-short">${r.short}</span>` : ''}
+      </div>
+      <div class="rcard-org">${r.org}</div>
+      <div class="rcard-desc">${r.desc}</div>
+      <div class="rcard-tags">${concernTags}${classTags}${pubTag}${apiTag}</div>
+      <a class="view-card-link" href="${cardSlug}" target="_blank" onclick="event.stopPropagation()">
+        <svg width="10" height="10" viewBox="0 0 10 10" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M2 5h6M5 2l3 3-3 3"/></svg>
+        Full Card
+      </a>
+    </div>
+    <div class="rcard-score">
+      <div class="score-num ${sc}">${score}</div>
+      <div class="score-label">${isSW?'ETA':'DTAP'}</div>
+      <div class="score-mini-bars">${bars}</div>
+      ${isSW ? `<div class="gate-pills">${gatePills}</div>` : ''}
+    </div>
+  </div>`;
+}
+
+function loadMore() {
+  STATE.page++;
+  renderResults(true);
+}
+
+let _filtered = [];
+function renderResults(append = false) {
+  _filtered = getFiltered();
+  const total = _filtered.length;
+  const shown = _filtered.slice(0, STATE.page * STATE.pageSize);
+
+  document.getElementById('results-count').innerHTML = `<b>${total}</b> resource${total!==1?'s':''}`;
+  document.getElementById('stat-vis').textContent = total;
+
+  const grid = document.getElementById('cards-grid');
+  if (append) {
+    const start = (STATE.page - 1) * STATE.pageSize;
+    const newCards = _filtered.slice(start, STATE.page * STATE.pageSize);
+    grid.insertAdjacentHTML('beforeend', newCards.map((r,i) => renderCard(r, start+i)).join(''));
+  } else {
+    grid.innerHTML = shown.map((r,i) => renderCard(r,i)).join('');
+  }
+
+  document.getElementById('empty-state').style.display = total === 0 ? 'block' : 'none';
+  document.getElementById('load-more-wrap').style.display = total > shown.length ? 'block' : 'none';
+}
+
+// ─── SEARCH ─────────────────────────────────────────────────────────────────
+let searchTimer;
+document.getElementById('global-search').addEventListener('input', e => {
+  clearTimeout(searchTimer);
+  searchTimer = setTimeout(() => {
+    STATE.search = e.target.value.trim();
+    STATE.page = 1;
+    renderResults();
+  }, 180);
+});
+
+// ─── HERO PILL TYPE TOGGLE ───────────────────────────────────────────────────
+document.getElementById('pill-all').addEventListener('click', () => setType('all'));
+document.getElementById('pill-sw').addEventListener('click', () => setType('software'));
+document.getElementById('pill-ds').addEventListener('click', () => setType('datasets'));
+
+// ─── INIT ───────────────────────────────────────────────────────────────────
+buildFilterPanels();
+renderResults();
+</script>
+</body>
+</html>
